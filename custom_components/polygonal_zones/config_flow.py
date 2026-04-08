@@ -117,7 +117,7 @@ class OptionsFlowHandler(OptionsFlow):
 
     def __init__(self, config_entry: ConfigEntry):
         """Initialize the OptionsFlowHandler with configuration data."""
-        self.config_entry = config_entry
+        self._entry = config_entry
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
@@ -129,12 +129,12 @@ class OptionsFlowHandler(OptionsFlow):
                 errors["zone_urls"] = "invalid_url_or_file"
             else:
                 self.hass.config_entries.async_update_entry(
-                    self.config_entry, data=user_input
+                    self._entry, data=user_input
                 )
                 return self.async_create_entry(title="", data=user_input)
 
         return self.async_show_form(
             step_id="init",
-            data_schema=build_options_flow(self.config_entry.data),
+            data_schema=build_options_flow(self._entry.data),
             errors=errors,
         )
